@@ -11,4 +11,8 @@ app.use("/api/auth", authRoutes);
 const loanRoutes = require("./routes/loanRoutes");
 app.use("/api/loans", loanRoutes);
 
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
 module.exports = app;
