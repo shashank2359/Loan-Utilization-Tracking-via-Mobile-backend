@@ -4,7 +4,10 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role = "beneficiary" } = req.body;
+
+    const allowedRoles = ["beneficiary", "officer", "admin"];
+    const userRole = allowedRoles.includes(role) ? role : "beneficiary";
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -18,7 +21,7 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: "beneficiary"
+      role: userRole,
     });
 
     const token = jwt.sign(

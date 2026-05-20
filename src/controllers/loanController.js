@@ -2,15 +2,20 @@ const Loan = require("../models/Loan");
 
 const applyLoan = async (req, res) => {
   try {
+    if (req.user.role !== "beneficiary") {
+      return res.status(403).json({ message: "Only beneficiaries can apply for loans" });
+    }
+
     const { amount, purpose } = req.body;
 
     if (!amount || amount <= 0) {
-  return res.status(400).json({ message: "Amount must be greater than 0" });
-}
+      return res.status(400).json({ message: "Amount must be greater than 0" });
+    }
 
-if (!purpose || purpose.trim() === "") {
-  return res.status(400).json({ message: "Purpose is required" });
-}
+    if (!purpose || purpose.trim() === "") {
+      return res.status(400).json({ message: "Purpose is required" });
+    }
+
     const loan = await Loan.create({
       user: req.user.id,
       amount,
